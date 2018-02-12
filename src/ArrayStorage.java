@@ -2,7 +2,6 @@
  * Array based storage for Resumes
  *@count - счетчик объектов в массиве
  */
-import com.sun.org.apache.xpath.internal.SourceTree;
 
 import java.util.Arrays;
 
