@@ -18,4 +18,10 @@ public class Resume {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
+
+    @Override
+    //нужно будет переопределить в следующем уроке
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
 }
