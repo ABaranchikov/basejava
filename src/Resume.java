@@ -20,7 +20,7 @@ public class Resume {
     }
 
     @Override
-    //нужно будетв переопределить в следующем уроке
+    //нужно будет переопределить в следующем уроке
     public boolean equals(Object o) {
         return super.equals(o);
     }
