@@ -14,7 +14,7 @@ public class ArrayStorage {
     В противном случае возвращает -1.
     @param String uuid - ID элемента массива
      */
-    public int getIndex(String uuid) {
+    private int getIndex(String uuid) {
 
         for (int i = 0; i < count; i++) {
             if (storage[i].getUuid().equals(uuid)) return i;
@@ -22,24 +22,12 @@ public class ArrayStorage {
         return -1;
     }
 
-    public int getIndex(Resume r) {
-
-        for (int i = 0; i < count; i++) {
-            if (storage[i].equals(r)) return i;
-        }
-        return -1;
-    }
-
-
-
     /*
     Очищает массив
      */
     public void clear() {
-
         Arrays.fill(this.storage, null);
         count = 0;
-
     }
 
     /*
@@ -50,11 +38,9 @@ public class ArrayStorage {
 
     public void update(Resume r){
 
-        String id = r.getUuid();
+        int i = getIndex(r.getUuid());
 
-        if (getIndex(r)>=0) {
-            System.out.println("Нашли резюме");
-        }
+        if (i>=0) {storage[i] = r;}
         else System.out.println("Данного резюме нет в базе!");
     }
 
@@ -64,7 +50,7 @@ public class ArrayStorage {
      */
     public void save(Resume r) {
         //проверить на отсутствие резюме
-        int i = getIndex(r);
+        int i = getIndex(r.getUuid());
         if (i>=0) {
             System.out.println("Данное резюме уже есть в базе!");
             return;
@@ -92,14 +78,12 @@ public class ArrayStorage {
      */
     public void delete(String uuid) {
         //проверить на наличие резюме
-
         int i =getIndex(uuid);
         if (i>=0) {
             storage[i] = storage[count-1];
             storage[--count] =null;
         }
         else System.out.println("Данного резюме нет в базе!");
-
     }
 
     /**
@@ -110,7 +94,6 @@ public class ArrayStorage {
     }
 
     public int size() {
-
         return count;
     }
 }
