@@ -6,10 +6,18 @@ public abstract class AbstractArrayStorage implements Storage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+    /*
+    @return size of the array
+     */
     public int size() {
         return size;
     }
 
+    /*
+   Get resume from ArrayStorage
+   @param uuid - ID resume
+   @return resume
+    */
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index == -1) {
@@ -19,18 +27,37 @@ public abstract class AbstractArrayStorage implements Storage {
         return storage[index];
     }
 
-    public void clear(){
+    /*
+    clear of the array
+     */
+    public void clear() {
         Arrays.fill(storage, null);
         size = 0;
-    };
+    }
 
-    protected abstract int getIndex(String uuid);
+    /*
+    find and uodate resume in base
+     */
 
-    public abstract void update(Resume r);
+    public void update(Resume r) {
+
+        int i = getIndex(r.getUuid());
+
+        if (i >= 0) {
+            storage[i] = r;
+        } else System.out.println("Resume not found!");
+    }
+
+    /*
+    @return all resume from base
+     */
+    public Resume[] getAll() {
+        return Arrays.copyOfRange(storage, 0, size);
+    }
 
     public abstract void save(Resume r);
 
     public abstract void delete(String uuid);
 
-    public abstract Resume[] getAll();
+    protected abstract int getIndex(String uuid);
 }
