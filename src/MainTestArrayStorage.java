@@ -1,3 +1,7 @@
+import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.ArrayStorage;
+import ru.javawebinar.basejava.storage.SortedArrayStorage;
+
 /**
  * Test for com.urise.webapp.storage.ArrayStorage
  */
