@@ -1,5 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
+import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -18,28 +21,14 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     /*
-    Check the new storage size.
-    Return false if new size > STORAGE_LIMIT
+    Get resume from ArrayStorage
+    @param uuid - ID resume
+    @return resume
      */
-    private boolean checkSize() {
-
-        if (this.size + 1 > STORAGE_LIMIT) {
-            System.out.println("Storage is full! Can't add new element.");
-            return false;
-        }
-        return true;
-    }
-
-    /*
-   Get resume from ArrayStorage
-   @param uuid - ID resume
-   @return resume
-    */
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("Resume " + uuid + " not exist");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -61,7 +50,9 @@ public abstract class AbstractArrayStorage implements Storage {
 
         if (i >= 0) {
             storage[i] = r;
-        } else System.out.println("Resume " + r.getUuid() + " not exist");
+        } else {
+            throw new NotExistStorageException(r.getUuid());
+        }
     }
 
     /*
@@ -76,14 +67,16 @@ public abstract class AbstractArrayStorage implements Storage {
     */
     public void save(Resume r) {
 
-        if (checkSize()) {
-
-            int index = getIndex(r.getUuid());
-            if (index < 0)
-                addResume(r, index);
-            else
-                System.out.println("Resume " + r.getUuid() + " is allready exist!");
+        int index = getIndex(r.getUuid());
+        if (index > 0)
+            throw new ExistStorageException(r.getUuid());
+        else if (size == STORAGE_LIMIT) {
+            throw new StorageException("Storage overflow!", r.getUuid());
+        } else {
+            addResume(r, index);
+            size++;
         }
+
     }
 
     /*
@@ -93,9 +86,11 @@ public abstract class AbstractArrayStorage implements Storage {
 
         int index = getIndex(uuid);
         if (index < 0)
-            System.out.println("Resume " + uuid + " not exist");
+            throw new NotExistStorageException(uuid);
         else {
             deleteResume(index);
+            storage[size - 1] = null;
+            size--;
         }
     }
 
