@@ -19,7 +19,7 @@ public class MainReflection {
 
         try {
 
-            Method method = r.getClass().getMethod("toString", null);
+            Method method = r.getClass().getMethod("toString");
             System.out.println((String) method.invoke(r));
         }
         catch (Exception e) {e.printStackTrace();}
