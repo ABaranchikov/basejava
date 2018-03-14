@@ -13,7 +13,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     @param Resume r - resume
      */
     @Override
-    protected void addResume(Resume r, int index) {
+    protected void addResume(int index, Resume r) {
         storage[size] = r;
     }
 
@@ -22,7 +22,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     @param int Index - index of the item to be deleted
     */
     @Override
-    protected void deleteResume(int index) {
+    protected void removeResume(int index) {
         storage[index] = storage[size - 1];
     }
 

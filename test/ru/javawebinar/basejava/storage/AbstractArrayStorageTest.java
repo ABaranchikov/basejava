@@ -8,6 +8,7 @@ import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 public abstract class AbstractArrayStorageTest {
+
     private Storage storage;
 
     private static final String UUID_1 = "uuid1";

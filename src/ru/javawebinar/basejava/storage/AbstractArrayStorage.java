@@ -7,7 +7,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected static final int STORAGE_LIMIT = 10;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -21,38 +21,11 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     /*
-    Get resume from ArrayStorage
-    @param uuid - ID resume
-    @return resume
-     */
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return storage[index];
-    }
-
-    /*
     clear of the array
      */
     public void clear() {
         Arrays.fill(storage, null);
         size = 0;
-    }
-
-    /*
-    find and update resume in base
-     */
-    public void update(Resume r) {
-
-        int i = getIndex(r.getUuid());
-
-        if (i >= 0) {
-            storage[i] = r;
-        } else {
-            throw new NotExistStorageException(r.getUuid());
-        }
     }
 
     /*
@@ -62,41 +35,33 @@ public abstract class AbstractArrayStorage implements Storage {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
-    /*
-    add new resume in storage.
-    */
-    public void save(Resume r) {
-
-        int index = getIndex(r.getUuid());
-        if (index > 0)
-            throw new ExistStorageException(r.getUuid());
-        else if (size == STORAGE_LIMIT) {
-            throw new StorageException("Storage overflow!", r.getUuid());
-        } else {
-            addResume(r, index);
-            size++;
-        }
-
+    @Override
+    protected void saveResume(int index, Resume r) {
+        if (size == STORAGE_LIMIT) throw new StorageException("Storage overflow!", r.getUuid());
+        addResume(index, r);
+        size++;
     }
 
-    /*
-    Delete resume from storage by the found index
-     */
-    public void delete(String uuid) {
+    @Override
+    protected void updateResume(int index, Resume r) {
+        storage[index] = r;
+    }
 
-        int index = getIndex(uuid);
-        if (index < 0)
-            throw new NotExistStorageException(uuid);
-        else {
-            deleteResume(index);
-            storage[size - 1] = null;
-            size--;
-        }
+    @Override
+    protected void deleteResume(int index) {
+        removeResume(index);
+        storage[size - 1] = null;
+        size--;
+    }
+
+    @Override
+    protected Resume getResume(int index) {
+        return storage[index];
     }
 
     protected abstract int getIndex(String uuid);
 
-    protected abstract void addResume(Resume r, int index);
+    protected abstract void addResume(int index, Resume r);
 
-    protected abstract void deleteResume(int index);
+    protected abstract void removeResume(int index);
 }
