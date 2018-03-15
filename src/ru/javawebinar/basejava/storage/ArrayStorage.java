@@ -13,7 +13,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     @param Resume r - resume
      */
     @Override
-    protected void addResume(int index, Resume r) {
+    protected void addResume(Object index, Resume r) {
         storage[size] = r;
     }
 
@@ -22,8 +22,8 @@ public class ArrayStorage extends AbstractArrayStorage {
     @param int Index - index of the item to be deleted
     */
     @Override
-    protected void removeResume(int index) {
-        storage[index] = storage[size - 1];
+    protected void removeResume(Object index) {
+        storage[(int)index] = storage[size - 1];
     }
 
     /*
@@ -33,10 +33,16 @@ public class ArrayStorage extends AbstractArrayStorage {
    @param String uuid - ID resume
    @return index
     */
-    protected int getIndex(String uuid) {
+
+    protected Object getSearchKey(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) return i;
         }
         return -1;
+    }
+
+    protected boolean isExist(Object searchKey){
+        if ((int)searchKey<0) return false;
+        return true;
     }
 }

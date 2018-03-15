@@ -1,7 +1,6 @@
 package ru.javawebinar.basejava.storage;
 
 import org.junit.*;
-import org.junit.rules.ExpectedException;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
@@ -26,7 +25,6 @@ public abstract class AbstractArrayStorageTest {
     public AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
     }
-
 
     @Before
     public void setUp() throws Exception {
