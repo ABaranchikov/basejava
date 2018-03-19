@@ -13,7 +13,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
      */
     @Override
     protected void addResume(Object index, Resume r) {
-        int newIndex = -(int) index - 1;
+        Integer newIndex = -(int) index - 1;
         System.arraycopy(storage, newIndex, storage, newIndex + 1, size - newIndex);
         storage[newIndex] = r;
     }
@@ -23,7 +23,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
      */
     @Override
     protected void removeResume(Object index) {
-        int i = (int) index;
+        Integer i = (Integer) index;
         System.arraycopy(storage, i + 1, storage, i, size - i - 1);
     }
 
@@ -31,13 +31,12 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     Search index of element using binarySearch
     */
     @Override
-    protected Object getSearchKey(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         Resume searchKey = new Resume(uuid);
-        return (Object) Arrays.binarySearch(storage, 0, size, searchKey);
+        return Arrays.binarySearch(storage, 0, size, searchKey);
     }
 
     protected boolean isExist(Object searchKey){
-        if ((int)searchKey<0) return false;
-        return true;
+        return (Integer) searchKey >= 0;
     }
 }

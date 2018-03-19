@@ -5,8 +5,6 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.Arrays;
-
 public class ArrayStorage extends AbstractArrayStorage {
     /*
     add Resume to the end of the Storage
@@ -23,7 +21,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     */
     @Override
     protected void removeResume(Object index) {
-        storage[(int)index] = storage[size - 1];
+        storage[(Integer) index] = storage[size - 1];
     }
 
     /*
@@ -34,7 +32,7 @@ public class ArrayStorage extends AbstractArrayStorage {
    @return index
     */
 
-    protected Object getSearchKey(String uuid) {
+    protected Integer getSearchKey(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) return i;
         }
@@ -42,7 +40,6 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     protected boolean isExist(Object searchKey){
-        if ((int)searchKey<0) return false;
-        return true;
+        return (Integer) searchKey >= 0;
     }
 }
