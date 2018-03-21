@@ -3,14 +3,19 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
-
     /*
-    Add a resume in sorted order.
-    @param Resume r - resume
-    @param int index - new item index
-     */
+    private static class ResumeComparator implements Comparator<Resume> {
+        @Override
+        public int compare(Resume o1, Resume o2) {
+            return o1.getUuid().compareTo(o2.getUuid());
+        }
+    }
+*/
+    private static final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getUuid);
+
     @Override
     protected void addResume(Object index, Resume r) {
         Integer newIndex = -(int) index - 1;
@@ -18,9 +23,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         storage[newIndex] = r;
     }
 
-    /*
-    Delete resume from storage and save the sorted order
-     */
     @Override
     protected void removeResume(Object index) {
         Integer i = (Integer) index;
@@ -33,10 +35,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
     protected Integer getSearchKey(String uuid) {
         Resume searchKey = new Resume(uuid);
-        return Arrays.binarySearch(storage, 0, size, searchKey);
-    }
-
-    protected boolean isExist(Object searchKey){
-        return (Integer) searchKey >= 0;
+        return Arrays.binarySearch(storage, 0, size, searchKey, RESUME_COMPARATOR);
     }
 }

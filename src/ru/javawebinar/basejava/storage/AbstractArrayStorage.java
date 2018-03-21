@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
 
-    protected static final int STORAGE_LIMIT = 10;
+    protected static final int STORAGE_LIMIT = 10000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
@@ -36,7 +36,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     protected void saveResume(Object index, Resume r) {
         if (size == STORAGE_LIMIT) throw new StorageException("Storage overflow!", r.getUuid());
-        addResume((Integer)index, r);
+        addResume((Integer) index, r);
         size++;
     }
 
@@ -47,7 +47,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected void deleteResume(Object index) {
-        removeResume((Integer)index);
+        removeResume((Integer) index);
         storage[size - 1] = null;
         size--;
     }
@@ -56,7 +56,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume getResume(Object index) {
         return storage[(Integer) index];
     }
-    protected abstract boolean isExist(Object searchKey);
+
+    @Override
+    protected boolean isExist(Object index) {
+        return (Integer) index >= 0;
+    }
 
     protected abstract Integer getSearchKey(String uuid);
 
