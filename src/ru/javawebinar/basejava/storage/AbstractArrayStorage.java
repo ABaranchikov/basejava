@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
 
@@ -26,11 +27,10 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
-    /*
-    @return all resume from base
-     */
-    public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
+    protected List<Resume> getStorage(){
+
+        Resume[] allResume = Arrays.copyOfRange(storage, 0, size);
+        return Arrays.asList(allResume);
     }
 
     @Override

@@ -28,10 +28,8 @@ public class ListStorage extends AbstractStorage {
         storage.remove(((Integer) index).intValue());
     }
 
-    @Override
-    public Resume[] getAll() {
-        Resume[] list = new Resume[storage.size()];
-        return storage.toArray(list);
+    protected List<Resume> getStorage(){
+        return storage;
     }
 
     @Override
