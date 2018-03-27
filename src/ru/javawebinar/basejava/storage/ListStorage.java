@@ -29,7 +29,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     protected List<Resume> getStorage(){
-        return storage;
+        return storage.subList(0, storage.size());
     }
 
     @Override
@@ -41,8 +41,8 @@ public class ListStorage extends AbstractStorage {
     protected Resume getResume(Object index) {
         return storage.get((Integer) index);
     }
-
-    protected Object getSearchKey(String uuid) {
+    @Override
+    protected Integer getSearchKey(String uuid) {
         Integer index = 0;
         for (Resume r : storage) {
             if (uuid.equals(r.getUuid())) {

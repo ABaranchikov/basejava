@@ -13,10 +13,6 @@ public class MapUuidStorage extends AbstractStorage {
 
     protected Map<String, Resume> map = new HashMap<>();
 
-    public Map<String, Resume> getMap()	{
-        return map;
-    }
-
     @Override
     protected String getSearchKey(String uuid) {
         return uuid;
