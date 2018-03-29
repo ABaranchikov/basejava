@@ -7,9 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// TODO implement
-// TODO create new MapStorage with search key not uuid
-public class MapUuidStorage extends AbstractStorage {
+public class MapUuidStorage extends AbstractStorage<String> {
 
     protected Map<String, Resume> map = new HashMap<>();
 
@@ -19,29 +17,29 @@ public class MapUuidStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateResume(Object index, Resume r) {
-        map.put((String)index, r);
+    protected void updateResume(String index, Resume r) {
+        map.put(index, r);
     }
 
     @Override
-    protected boolean isExist(Object index) {
+    protected boolean isExist(String index) {
 
-        return map.get((String)index) != null;
+        return map.get(index) != null;
     }
 
     @Override
-    protected void saveResume(Object index, Resume r) {
-        map.put((String)index, r);
+    protected void saveResume(String index, Resume r) {
+        map.put(index, r);
     }
 
     @Override
-    protected Resume getResume(Object index) {
-        return map.get((String)index);
+    protected Resume getResume(String index) {
+        return map.get(index);
     }
 
     @Override
-    protected void deleteResume(Object index) {
-        map.remove((String)index);
+    protected void deleteResume(String index) {
+        map.remove(index);
     }
 
     @Override
@@ -51,7 +49,7 @@ public class MapUuidStorage extends AbstractStorage {
 
     @Override
     protected List<Resume> getStorage() {
-       return new ArrayList<>(map.values());
+        return new ArrayList<>(map.values());
     }
 
     @Override
