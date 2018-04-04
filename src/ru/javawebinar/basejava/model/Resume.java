@@ -11,49 +11,8 @@ public class Resume {
     private final String uuid;
     private final String fullName;
 
-    private Map<String, String> contacts = new LinkedHashMap<>();
-    private Map<String, List<?>> textFields = new HashMap<>();
-
-    public static class Experience {
-        private String company;
-        private String dateFrom;
-        private String dateTo;
-        private String position;
-        private String duties;
-
-        public Experience(String company, String dateFrom, String dateTo, String position, String duties) {
-            this.company = company;
-            this.dateFrom = dateFrom;
-            this.dateTo = dateTo;
-            this.position = position;
-            this.duties = duties;
-        }
-
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-
-            sb.append("Company: ");
-            sb.append(company);
-            sb.append("\n");
-
-            sb.append("From: ");
-            sb.append(dateFrom);
-            sb.append("\n");
-
-            sb.append("To: ");
-            sb.append(dateTo);
-            sb.append("\n");
-
-            sb.append("Position: ");
-            sb.append(position);
-            sb.append("\n");
-
-            sb.append("Duties: ");
-            sb.append(duties);
-
-            return sb.toString();
-        }
-    }
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, Section> textFields = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -70,26 +29,26 @@ public class Resume {
         return fullName;
     }
 
-    public void setContacts(String contactType, String contactValue) {
+    public void setContacts(ContactType contactType, String contactValue) {
         contacts.put(contactType, contactValue);
     }
 
     public void getContacts() {
-        for (Map.Entry<String, String> contact : contacts.entrySet()) {
-            System.out.println(contact.getKey() + " : " + contact.getValue());
+        for (Map.Entry<ContactType, String> contact : contacts.entrySet()) {
+            System.out.println(contact.getKey().getTitle() + contact.getValue());
         }
     }
 
-    public void setTextFields(String key, List<?> list) {
-        textFields.put(key, list);
+    public void setTextFields(SectionType key, Section section) {
+        textFields.put(key, section);
     }
 
-    public void getTextFields(String key) {
-        List<?> list = textFields.get(key);
-        if (list != null) {
-            for (Object ob : list) System.out.println(ob);
+    public void getTextFields() {
+        for (SectionType sectionType : SectionType.values()) {
+            System.out.println(sectionType.getTitle());
+            Section section = textFields.get(sectionType);
+            System.out.println(section);
         }
-
     }
 
     @Override
