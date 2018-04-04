@@ -15,7 +15,7 @@ public class ListField<T> extends Section {
         StringBuilder sb = new StringBuilder();
         for (Object aList : list) {
             sb.append(aList);
-            sb.append("\n");
+           
         }
         return sb.toString();
     }
