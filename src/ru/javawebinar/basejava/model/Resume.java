@@ -12,7 +12,7 @@ public class Resume {
     private final String fullName;
 
     private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
-    private final Map<SectionType, Section> textFields = new EnumMap<>(SectionType.class);
+    private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -33,20 +33,29 @@ public class Resume {
         contacts.put(contactType, contactValue);
     }
 
+    public String getContacts(ContactType type){
+        return contacts.get(type);
+    }
+
+    public Section getSection(SectionType type){
+        return sections.get(type);
+    }
+
+
     public void getContacts() {
         for (Map.Entry<ContactType, String> contact : contacts.entrySet()) {
             System.out.println(contact.getKey().getTitle() + contact.getValue());
         }
     }
 
-    public void setTextFields(SectionType key, Section section) {
-        textFields.put(key, section);
+    public void setSections(SectionType key, Section section) {
+        sections.put(key, section);
     }
 
-    public void getTextFields() {
+    public void getAllSection() {
         for (SectionType sectionType : SectionType.values()) {
             System.out.println(sectionType.getTitle());
-            Section section = textFields.get(sectionType);
+            Section section = sections.get(sectionType);
             System.out.println(section);
         }
     }
