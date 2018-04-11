@@ -25,4 +25,10 @@ public class FileStorage extends AbstractFileStorage {
         }
         fw.close();
     }
+
+    @Override
+    protected Resume doRead(File file) throws IOException {
+        return null;
+    }
+
 }

@@ -27,12 +27,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public void clear() {
         File[] list = directory.listFiles();
-        if (list != null) {
-            for (File file : list) {
-                if (file.isFile()) {
-                    boolean b = file.delete();
-                }
-            }
+        if (list == null) throw new StorageException("Directory is empty", "");
+        for (File file : list) {
+            deleteResume(file);
         }
     }
 
@@ -40,11 +37,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> getStorage() {
         List<Resume> storage = new ArrayList<>();
         File[] list = directory.listFiles();
-        if (list != null) {
-            for (File file : list) {
-                if (file.isFile()) {
-                    storage.add(new Resume(file.getName(), ""));
-                }
+        if (list == null) throw new StorageException("Directory is empty", "");
+        for (File file : list) {
+            if (file.isFile()) {
+                storage.add(getResume(file));
             }
         }
         return storage;
@@ -52,9 +48,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-
         return Objects.requireNonNull(directory.listFiles()).length;
-
     }
 
     @Override
@@ -64,7 +58,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected Resume getResume(File file) {
-        return new Resume(file.getName(), "");
+        try {
+            return doRead(file);
+        } catch (IOException e) {
+            throw new StorageException("File read error", file.getName(), e);
+        }
     }
 
     @Override
@@ -79,10 +77,13 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     protected abstract void doWrite(Resume r, File file) throws IOException;
 
+    protected abstract Resume doRead(File file) throws IOException;
+
     @Override
     protected void deleteResume(File file) {
-        file.delete();
-
+        if (!file.delete()) {
+            throw new StorageException("File delete error", file.getName());
+        }
     }
 
     @Override
