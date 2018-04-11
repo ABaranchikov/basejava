@@ -1,7 +1,6 @@
 package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.model.*;
-import ru.javawebinar.basejava.storage.FileStorage;
 import ru.javawebinar.basejava.util.DateUtil;
 
 import java.io.File;

@@ -26,9 +26,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        File[] list = directory.listFiles();
-        if (list == null) throw new StorageException("Directory is empty", "");
-        for (File file : list) {
+        File[] files = FileList();
+        for (File file : files) {
             deleteResume(file);
         }
     }
@@ -36,9 +35,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> getStorage() {
         List<Resume> storage = new ArrayList<>();
-        File[] list = directory.listFiles();
-        if (list == null) throw new StorageException("Directory is empty", "");
-        for (File file : list) {
+        File[] files = FileList();
+        for (File file : files) {
             if (file.isFile()) {
                 storage.add(getResume(file));
             }
@@ -48,7 +46,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        return Objects.requireNonNull(directory.listFiles()).length;
+        File[] files = FileList();
+        return files.length;
     }
 
     @Override
@@ -68,8 +67,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void saveResume(File file, Resume r) {
         try {
-            file.createNewFile();
-            doWrite(r, file);
+            if (file.createNewFile()) {
+                updateResume(file, r);
+            }
         } catch (IOException e) {
             throw new StorageException("IO error", file.getName(), e);
         }
@@ -88,11 +88,22 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void updateResume(File file, Resume r) {
-        saveResume(file, r);
+        try {
+            doWrite(r, file);
+        } catch (IOException e) {
+            throw new StorageException("IO error", file.getName(), e);
+        }
     }
 
     @Override
     protected File getSearchKey(String uuid) {
         return new File(directory, uuid);
     }
+
+    private File[] FileList() {
+        File[] files = directory.listFiles();
+        if (files == null) throw new StorageException("Directory is empty", "");
+        return files;
+    }
+
 }
