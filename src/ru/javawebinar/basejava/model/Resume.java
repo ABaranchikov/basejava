@@ -1,11 +1,14 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * com.urise.webapp.model.Resume class
  */
-public class Resume {
+public class Resume implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     // Unique identifier
     private final String uuid;
@@ -41,23 +44,8 @@ public class Resume {
         return sections.get(type);
     }
 
-
-    public void getContacts() {
-        for (Map.Entry<ContactType, String> contact : contacts.entrySet()) {
-            System.out.println(contact.getKey().getTitle() + contact.getValue());
-        }
-    }
-
-    public void setSections(SectionType key, Section section) {
+    public void setSection(SectionType key, Section section) {
         sections.put(key, section);
-    }
-
-    public void getAllSection() {
-        for (SectionType sectionType : SectionType.values()) {
-            System.out.println(sectionType.getTitle());
-            Section section = sections.get(sectionType);
-            System.out.println(section);
-        }
     }
 
     @Override

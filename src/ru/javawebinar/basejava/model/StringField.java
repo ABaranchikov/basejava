@@ -3,6 +3,8 @@ package ru.javawebinar.basejava.model;
 import java.util.Objects;
 
 public class StringField extends Section {
+    private static final long serialVersionUID = 1L;
+
     private final String name;
 
     public StringField(String name) {

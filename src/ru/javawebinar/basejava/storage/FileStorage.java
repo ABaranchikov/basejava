@@ -3,17 +3,18 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
 
     private File directory;
+    private Strategy strategy;
 
-    protected AbstractFileStorage(File directory) {
+    public FileStorage(String dir, Strategy strategy) {
+        File directory = new File(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -22,11 +23,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
+        this.strategy = strategy;
     }
 
     @Override
     public void clear() {
-        File[] files = FileList();
+        File[] files = fileList();
         for (File file : files) {
             deleteResume(file);
         }
@@ -34,8 +36,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> getStorage() {
-        List<Resume> storage = new ArrayList<>();
-        File[] files = FileList();
+        File[] files = fileList();
+        List<Resume> storage = new ArrayList<>(files.length);
         for (File file : files) {
             if (file.isFile()) {
                 storage.add(getResume(file));
@@ -46,7 +48,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        File[] files = FileList();
+        File[] files = fileList();
         return files.length;
     }
 
@@ -58,7 +60,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume getResume(File file) {
         try {
-            return doRead(file);
+            return strategy.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File read error", file.getName(), e);
         }
@@ -67,17 +69,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void saveResume(File file, Resume r) {
         try {
-            if (file.createNewFile()) {
-                updateResume(file, r);
-            }
+            file.createNewFile();
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName(), e);
         }
+        updateResume(file, r);
     }
-
-    protected abstract void doWrite(Resume r, File file) throws IOException;
-
-    protected abstract Resume doRead(File file) throws IOException;
 
     @Override
     protected void deleteResume(File file) {
@@ -89,9 +86,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void updateResume(File file, Resume r) {
         try {
-            doWrite(r, file);
+            strategy.doWrite(r, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
-            throw new StorageException("IO error", file.getName(), e);
+            throw new StorageException("File write error", r.getUuid(), e);
         }
     }
 
@@ -100,10 +97,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         return new File(directory, uuid);
     }
 
-    private File[] FileList() {
+    private File[] fileList() {
         File[] files = directory.listFiles();
         if (files == null) throw new StorageException("Directory is empty", "");
         return files;
     }
-
 }
