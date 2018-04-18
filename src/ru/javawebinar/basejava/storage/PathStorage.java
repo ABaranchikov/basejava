@@ -31,7 +31,6 @@ public class PathStorage extends AbstractStorage<Path> {
     public void clear() {
         try {
             Files.list(directory)
-                    .filter(Files::isRegularFile)
                     .forEach(this::deleteResume);
         } catch (IOException e) {
             throw new StorageException("Path delete error", null);
@@ -41,15 +40,14 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected List<Resume> getStorage() {
         List<Resume> storage = new ArrayList<>();
-        try (Stream<Path> paths = Files.walk(directory)) {
-            List<Path> list = paths.filter(Files::isRegularFile)
-                    .collect(Collectors.toList());
+        try (Stream<Path> paths = Files.list(directory)) {
+            List<Path> list = paths.collect(Collectors.toList());
 
             for (Path file : list) {
                 storage.add(getResume(file));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new StorageException("Directory read error", null);
         }
 
         return storage;
@@ -59,11 +57,9 @@ public class PathStorage extends AbstractStorage<Path> {
     public int size() {
         long size = 0;
         try {
-            size = Files.list(directory)
-                    .filter(Files::isRegularFile)
-                    .count();
+            size = Files.list(directory).count();
         } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
+            throw new StorageException("Directory read error", null);
         }
         return (int) size;
     }
@@ -71,7 +67,6 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected boolean isExist(Path path) {
         return Files.exists(path, LinkOption.NOFOLLOW_LINKS);
-        //return Files.exists(path);
     }
 
     @Override
