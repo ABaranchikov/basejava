@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.*;
@@ -36,12 +35,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getStorage() {
-        List<Resume> storage = new ArrayList<>();
-        List<Path> list = getFilesList().collect(Collectors.toList());
-        for (Path file : list) {
-            storage.add(getResume(file));
-        }
-        return storage;
+        return getFilesList().map(this::getResume).collect(Collectors.toList());
     }
 
     @Override
@@ -94,7 +88,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return Paths.get(getFileName(directory) + "//" + uuid);
+        return directory.resolve(uuid);
     }
 
     private String getFileName(Path path) {

@@ -1,6 +1,11 @@
 package ru.javawebinar.basejava.model;
 
 import ru.javawebinar.basejava.util.DateUtil;
+import ru.javawebinar.basejava.util.LocalDateAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import static ru.javawebinar.basejava.util.DateUtil.NOW;
 
@@ -12,12 +17,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Experience implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final Link homePage;
+    private Link homePage;
 
     private List<Periods> periods = new ArrayList<>();
+
+    public Experience() {
+
+    }
+
+    ;
 
     public Experience(String name, String url, Periods... periods) {
         this(new Link(name, url), Arrays.asList(periods));
@@ -37,6 +49,17 @@ public class Experience implements Serializable {
                 Objects.equals(periods, that.periods);
     }
 
+    public List<String> getExperience() {
+        List<String> list = new ArrayList<>();
+        list.add(homePage.getName());
+        list.add(homePage.getUrl());
+        list.add(String.valueOf(periods.size()));
+        for (Periods period: periods){
+            list.addAll(period.getPeriodFields());
+        }
+        return list;
+    }
+
     @Override
     public int hashCode() {
 
@@ -51,11 +74,17 @@ public class Experience implements Serializable {
                 '}';
     }
 
-    public static class Periods implements Serializable{
-        private final LocalDate dateFrom;
-        private final LocalDate dateTo;
-        private final String title;
-        private final String description;
+    @XmlAccessorType(XmlAccessType.FIELD)
+    public static class Periods implements Serializable {
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate dateFrom;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate dateTo;
+        private String title;
+        private String description;
+
+        public Periods() {
+        }
 
         public Periods(int startYear, Month startMonth, String title, String description) {
             this(DateUtil.of(startYear, startMonth), NOW, title, description);
@@ -91,6 +120,10 @@ public class Experience implements Serializable {
 
         public String getDescription() {
             return description;
+        }
+
+        List<String> getPeriodFields(){
+            return new ArrayList<>(Arrays.asList(dateFrom.toString(),dateTo.toString(),title, (description == null ? "null" : description)));
         }
 
         @Override

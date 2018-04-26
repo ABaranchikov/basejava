@@ -49,21 +49,21 @@ public abstract class AbstractStorageTest {
 
 
     public void fillResume(Resume res) {
-        res.setContacts(ContactType.PHONE, "+7(921) 855-0482");
-        res.setContacts(ContactType.SKYPE, "grigory.kislin");
-        res.setContacts(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
-        res.setContacts(ContactType.GITHUB, "https://github.com/gkislin");
-        res.setContacts(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/gkislin");
-        res.setContacts(ContactType.HOMEPAGE, "http://gkislin.ru/");
+        res.addContact(ContactType.PHONE, "+7(921) 855-0482");
+        res.addContact(ContactType.SKYPE, "grigory.kislin");
+        res.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
+        res.addContact(ContactType.GITHUB, "https://github.com/gkislin");
+        res.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/gkislin");
+        res.addContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
         StringField objective = new StringField("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
-        res.setSection(SectionType.OBJECTIVE, objective);
+        res.addSection(SectionType.OBJECTIVE, objective);
 
         List<String> personal = new ArrayList<>();
 
         personal.add("Аналитический склад ума, сильная логика, креативность, инициативность.");
         personal.add("Пурист кода и архитектуры.");
-        res.setSection(SectionType.PERSONAL, new ListField<String>(personal));
+        res.addSection(SectionType.PERSONAL, new ListField(personal));
 
         List<String> achievment = new ArrayList<>();
         achievment.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.\n");
@@ -72,7 +72,7 @@ public abstract class AbstractStorageTest {
         achievment.add("Реализация c нуля Rich Internet Application приложения на стеке технологий JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Commet, HTML5, Highstock для алгоритмического трейдинга.");
         achievment.add("Создание JavaEE фреймворка для отказоустойчивого взаимодействия слабо-связанных сервисов (SOA-base архитектура, JAX-WS, JMS, AS Glassfish). Сбор статистики сервисов и информации о состоянии через систему мониторинга Nagios. Реализация онлайн клиента для администрирования и мониторинга системы по JMX (Jython/ Django).");
 
-        res.setSection(SectionType.ACHIEVEMENT, new ListField<String>(achievment));
+        res.addSection(SectionType.ACHIEVEMENT, new ListField(achievment));
 
         List<String> qualifications = new ArrayList<>();
         qualifications.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
@@ -87,7 +87,7 @@ public abstract class AbstractStorageTest {
         qualifications.add("Scala: SBT, Play2, Specs2, Anorm, Spray, Akka");
         qualifications.add("Технологии: Servlet, JSP/JSTL, JAX-WS, REST, EJB, RMI, JMS, JavaMail, JAXB, StAX, SAX, DOM, XSLT, MDB, JMX, JDBC, JPA, JNDI, JAAS, SOAP, AJAX, Commet, HTML5, ESB, CMIS, BPMN2, LDAP, OAuth1, OAuth2, JWT");
         qualifications.add("Инструменты: Maven + plugin development, Gradle, настройка Ngnix");
-        res.setSection(SectionType.QUALIFICATIONS, new ListField<String>(qualifications));
+        res.addSection(SectionType.QUALIFICATIONS, new ListField(qualifications));
 
         Experience.Periods period1 = new Experience.Periods(2014, Month.OCTOBER, 2016, Month.JANUARY, "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
         Experience exp1 = new Experience("Java Online Projects", "", period1);
@@ -95,7 +95,7 @@ public abstract class AbstractStorageTest {
         Experience.Periods period2 = new Experience.Periods(2014, Month.OCTOBER, 2016, Month.JANUARY, "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
         Experience exp2 = new Experience("Wrike", "", period2);
 
-        res.setSection(SectionType.EXPERIENCE, new ListField<>(exp1, exp2));
+        res.addSection(SectionType.EXPERIENCE, new ExperienceField(exp1, exp2));
 
         Experience edu1 = new Experience("Coursera", "coursera.com",
                 new Experience.Periods(2013, Month.MARCH, 2013, Month.MAY, "\"Functional Programming Principles in Scala\" by Martin Odersky", null));
@@ -112,9 +112,9 @@ public abstract class AbstractStorageTest {
         Experience edu5 = new Experience("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики", "www.ifmo.ru",
                 new Experience.Periods(1993, Month.SEPTEMBER, 1996, Month.JULY, "Аспирантура (программист С, С++)", null),
                 new Experience.Periods(1987, Month.SEPTEMBER, 1993, Month.JULY, "Инженер (программист Fortran, C)", null));
-        ListField<Experience> edu = new ListField<>(edu1, edu2, edu3, edu4, edu5);
+        ExperienceField edu = new ExperienceField(edu1, edu2, edu3, edu4, edu5);
 
-        res.setSection(SectionType.EDUCATION, edu);
+        res.addSection(SectionType.EDUCATION, edu);
 
     }
 

@@ -1,11 +1,17 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class StringField extends Section {
     private static final long serialVersionUID = 1L;
 
-    private final String name;
+    private String name;
+
+    public StringField() {
+    }
 
     public StringField(String name) {
         Objects.requireNonNull(name, "This field must not be null!");
@@ -17,8 +23,9 @@ public class StringField extends Section {
         return name;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public List<String> getAllFields() {
+        return new ArrayList<>(Arrays.asList(name));
     }
 
     @Override

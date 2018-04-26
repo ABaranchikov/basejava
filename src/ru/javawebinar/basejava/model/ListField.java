@@ -5,27 +5,33 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class ListField<T> extends Section {
+public class ListField extends Section {
     private static final long serialVersionUID = 1L;
 
-    private final List<T> items;
+    private List<String> items;
 
-    public ListField(T...items){
+    public ListField() {
+    }
+
+    public ListField(String... items) {
         this(Arrays.asList(items));
     }
 
-    public ListField (List<T> items){
-
+    public ListField(List<String> items) {
         Objects.requireNonNull(items, "items must not be null");
         this.items = items;
     }
 
-    public List<T> getItems() {
-        return items;
+    public String toString() {
+        return items.toString();
     }
 
-    public String toString() {
-            return items.toString();
+    @Override
+    public List<String> getAllFields() {
+        List<String> list = new ArrayList<>();
+        list.add(String.valueOf(items.size()));
+        list.addAll(items);
+        return list;
     }
 
     @Override
@@ -36,12 +42,12 @@ public class ListField<T> extends Section {
         ListField that = (ListField) o;
 
         return items.equals(that.items);
-
     }
 
     @Override
     public int hashCode() {
-
         return items.hashCode();
     }
+
+
 }
