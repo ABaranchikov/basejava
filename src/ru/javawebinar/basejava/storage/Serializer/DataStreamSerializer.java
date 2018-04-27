@@ -4,10 +4,7 @@ import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class DataStreamSerializer implements Strategy {
     @Override
@@ -21,17 +18,14 @@ public class DataStreamSerializer implements Strategy {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             }
-
-            for (SectionType sectionType : SectionType.values()) {
-                Section section = r.getSection(sectionType);
-                if (section != null) {
-                    dos.writeUTF(sectionType.name());
-                    for (String st : section.getAllFields()) {
-                        dos.writeUTF(st);
-                    }
+            Map<SectionType, Section> sections = r.getSections();
+            dos.writeInt(sections.size());
+            for (Map.Entry<SectionType, Section> section : sections.entrySet()) {
+                dos.writeUTF(section.getKey().name());
+                for (String st : getAllFields(section.getValue())) {
+                    dos.writeUTF(st);
                 }
             }
-            dos.writeUTF("END"); //end of file
         }
     }
 
@@ -46,9 +40,9 @@ public class DataStreamSerializer implements Strategy {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
 
-            for (SectionType sectionType : SectionType.values()) {
+            size = dis.readInt();
+            while (size > 0) {
                 String st1 = dis.readUTF();
-                if (st1.equals("END")) break;
                 SectionType sType = SectionType.valueOf(st1);
                 switch (sType) {
                     case OBJECTIVE:
@@ -70,7 +64,9 @@ public class DataStreamSerializer implements Strategy {
                         List<Experience> expList = new ArrayList<>();
                         int count2 = Integer.parseInt(dis.readUTF());
                         while (count2 > 0) {
-                            Link link = new Link(dis.readUTF(), dis.readUTF());
+                            String linkName = dis.readUTF();
+                            String linkURL = dis.readUTF();
+                            Link link = new Link(linkName, linkURL.equals("null") ? null : linkURL);
                             List<Experience.Periods> periodList = new ArrayList<>();
 
                             int periodsSize = Integer.parseInt(dis.readUTF());
@@ -86,12 +82,41 @@ public class DataStreamSerializer implements Strategy {
                             count2--;
                             expList.add(new Experience(link, periodList));
                         }
-
                         resume.addSection(sType, new ExperienceField(expList));
                         break;
                 }
+                size--;
             }
             return resume;
         }
+    }
+
+    private List<String> getAllFields(Section section) {
+
+        List<String> list = new ArrayList<>();
+
+        if (section instanceof StringField) {
+            list.add(section.toString());
+        } else if (section instanceof ListField) {
+            List<String> items = ((ListField) section).getItems();
+            list.add(String.valueOf(items.size()));
+            list.addAll(items);
+        } else {
+            List<Experience> experiences = ((ExperienceField) section).getExperiences();
+            list.add(String.valueOf(experiences.size()));
+            for (Experience exp : experiences) {
+                list.add(exp.getHomePage().getName());
+                list.add(exp.getHomePage().getUrl() == null ? "null" : exp.getHomePage().getUrl());
+                List<Experience.Periods> periods = exp.getPeriods();
+                list.add(String.valueOf(periods.size()));
+                for (Experience.Periods period : periods) {
+                    list.add(period.getStartDate().toString());
+                    list.add(period.getEndDate().toString());
+                    list.add(period.getTitle());
+                    list.add(period.getDescription() == null ? "null" : period.getDescription());
+                }
+            }
+        }
+        return list;
     }
 }

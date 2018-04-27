@@ -26,17 +26,7 @@ public class ExperienceField extends Section {
     }
 
     public List<Experience> getExperiences() {
-        return experiences;
-    }
-
-    @Override
-    public List<String> getAllFields(){
-        List<String> list = new ArrayList<>();
-        list.add(String.valueOf(experiences.size()));
-        for(Experience exp: experiences){
-            list.addAll(exp.getExperience());
-        }
-        return list;
+        return new ArrayList<>(experiences);
     }
 
     @Override

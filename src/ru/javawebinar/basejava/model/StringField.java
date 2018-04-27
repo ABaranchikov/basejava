@@ -1,8 +1,5 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 public class StringField extends Section {
@@ -21,11 +18,6 @@ public class StringField extends Section {
     @Override
     public String toString() {
         return name;
-    }
-
-    @Override
-    public List<String> getAllFields() {
-        return new ArrayList<>(Arrays.asList(name));
     }
 
     @Override

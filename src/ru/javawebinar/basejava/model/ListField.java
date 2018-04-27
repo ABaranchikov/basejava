@@ -22,16 +22,12 @@ public class ListField extends Section {
         this.items = items;
     }
 
-    public String toString() {
-        return items.toString();
+    public List<String> getItems(){
+        return new ArrayList<>(items);
     }
 
-    @Override
-    public List<String> getAllFields() {
-        List<String> list = new ArrayList<>();
-        list.add(String.valueOf(items.size()));
-        list.addAll(items);
-        return list;
+    public String toString() {
+        return items.toString();
     }
 
     @Override

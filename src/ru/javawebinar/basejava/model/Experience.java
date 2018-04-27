@@ -26,10 +26,7 @@ public class Experience implements Serializable {
     private List<Periods> periods = new ArrayList<>();
 
     public Experience() {
-
     }
-
-    ;
 
     public Experience(String name, String url, Periods... periods) {
         this(new Link(name, url), Arrays.asList(periods));
@@ -38,6 +35,14 @@ public class Experience implements Serializable {
     public Experience(Link homePage, List<Periods> periods) {
         this.homePage = homePage;
         this.periods = periods;
+    }
+
+    public Link getHomePage() {
+        return homePage;
+    }
+
+    public List<Periods> getPeriods() {
+        return new ArrayList<>(periods);
     }
 
     @Override
@@ -49,20 +54,8 @@ public class Experience implements Serializable {
                 Objects.equals(periods, that.periods);
     }
 
-    public List<String> getExperience() {
-        List<String> list = new ArrayList<>();
-        list.add(homePage.getName());
-        list.add(homePage.getUrl());
-        list.add(String.valueOf(periods.size()));
-        for (Periods period: periods){
-            list.addAll(period.getPeriodFields());
-        }
-        return list;
-    }
-
     @Override
     public int hashCode() {
-
         return Objects.hash(homePage, periods);
     }
 
@@ -120,10 +113,6 @@ public class Experience implements Serializable {
 
         public String getDescription() {
             return description;
-        }
-
-        List<String> getPeriodFields(){
-            return new ArrayList<>(Arrays.asList(dateFrom.toString(),dateTo.toString(),title, (description == null ? "null" : description)));
         }
 
         @Override
