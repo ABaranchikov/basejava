@@ -59,11 +59,8 @@ public abstract class AbstractStorageTest {
         StringField objective = new StringField("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         res.addSection(SectionType.OBJECTIVE, objective);
 
-        List<String> personal = new ArrayList<>();
-
-        personal.add("Аналитический склад ума, сильная логика, креативность, инициативность.");
-        personal.add("Пурист кода и архитектуры.");
-        res.addSection(SectionType.PERSONAL, new ListField(personal));
+        StringField personal = new StringField("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+        res.addSection(SectionType.PERSONAL, objective);
 
         List<String> achievment = new ArrayList<>();
         achievment.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.\n");
