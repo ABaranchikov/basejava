@@ -41,6 +41,7 @@ public class DataStreamSerializer implements Strategy {
                         for (String st: getExperienceFields(values)){
                             dos.writeUTF(st);
                         }
+                        System.out.println("");
                         break;
                 }
             }
