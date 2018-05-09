@@ -4,7 +4,9 @@ import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class DataStreamSerializer implements Strategy {
     @Override
@@ -58,9 +60,8 @@ public class DataStreamSerializer implements Strategy {
             for (int i = 0; i < size; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-
             size = dis.readInt();
-            while (size > 0) {
+            for (int i = 0; i < size; i++) {
                 String st1 = dis.readUTF();
                 SectionType sType = SectionType.valueOf(st1);
                 switch (sType) {
@@ -86,23 +87,20 @@ public class DataStreamSerializer implements Strategy {
                             String linkURL = dis.readUTF();
                             Link link = new Link(linkName, linkURL.equals("null") ? null : linkURL);
                             List<Experience.Periods> periodList = new ArrayList<>();
-
                             int periodsSize = Integer.parseInt(dis.readUTF());
-                            while (periodsSize > 0) {
+                            for (int j = 0; j < periodsSize; j++) {
                                 LocalDate d1 = LocalDate.parse(dis.readUTF());
                                 LocalDate d2 = LocalDate.parse(dis.readUTF());
                                 String title = dis.readUTF();
                                 String desc = dis.readUTF();
                                 Experience.Periods p = new Experience.Periods(d1, d2, title, desc.equals("null") ? null : desc);
                                 periodList.add(p);
-                                periodsSize--;
                             }
                             expList.add(new Experience(link, periodList));
                         }
                         resume.addSection(sType, new ExperienceField(expList));
                         break;
                 }
-                size--;
             }
             return resume;
         }
