@@ -58,7 +58,6 @@ public class DataStreamSerializer implements Strategy {
                             }
                         }
                         break;
-                    default:
                 }
             }
         }
@@ -114,7 +113,6 @@ public class DataStreamSerializer implements Strategy {
                         }
                         resume.addSection(sType, new ExperienceField(expList));
                         break;
-                    default:
                 }
             }
             return resume;
