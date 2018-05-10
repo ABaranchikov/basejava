@@ -34,17 +34,31 @@ public class DataStreamSerializer implements Strategy {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        for (String st: getListFields(values)){
-                            dos.writeUTF(st);
+                        List<String> items = ((ListField) values).getItems();
+                        dos.writeInt(items.size());
+                        for (String item : items) {
+                            dos.writeUTF(item);
                         }
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
-                        for (String st: getExperienceFields(values)){
-                            dos.writeUTF(st);
+                        List<Experience> experiences = ((ExperienceField) values).getExperiences();
+                        dos.writeInt(experiences.size());
+                        for (Experience exp : experiences) {
+                            dos.writeUTF(exp.getHomePage().getName());
+                            dos.writeUTF(exp.getHomePage().getUrl()== null ? "null" : exp.getHomePage().getUrl());
+
+                            List<Experience.Periods> periods = exp.getPeriods();
+                            dos.writeInt(periods.size());
+                            for (Experience.Periods period : periods) {
+                                dos.writeUTF(period.getStartDate().toString());
+                                dos.writeUTF(period.getEndDate().toString());
+                                dos.writeUTF(period.getTitle());
+                                dos.writeUTF(period.getDescription() == null ? "null" : period.getDescription());
+                            }
                         }
-                        System.out.println("");
                         break;
+                    default:
                 }
             }
         }
@@ -72,7 +86,7 @@ public class DataStreamSerializer implements Strategy {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         List<String> list = new ArrayList<>();
-                        int count = Integer.parseInt(dis.readUTF());
+                        int count = dis.readInt();
                         for (int k = 0; k<count; k++) {
                             list.add(dis.readUTF());
                         }
@@ -81,13 +95,13 @@ public class DataStreamSerializer implements Strategy {
                     case EXPERIENCE:
                     case EDUCATION:
                         List<Experience> expList = new ArrayList<>();
-                        int count2 = Integer.parseInt(dis.readUTF());
+                        int count2 = dis.readInt();;
                         for (int k=0; k<count2; k++){
                             String linkName = dis.readUTF();
                             String linkURL = dis.readUTF();
                             Link link = new Link(linkName, linkURL.equals("null") ? null : linkURL);
                             List<Experience.Periods> periodList = new ArrayList<>();
-                            int periodsSize = Integer.parseInt(dis.readUTF());
+                            int periodsSize = dis.readInt();
                             for (int j = 0; j < periodsSize; j++) {
                                 LocalDate d1 = LocalDate.parse(dis.readUTF());
                                 LocalDate d2 = LocalDate.parse(dis.readUTF());
@@ -100,36 +114,14 @@ public class DataStreamSerializer implements Strategy {
                         }
                         resume.addSection(sType, new ExperienceField(expList));
                         break;
+                    default:
                 }
             }
             return resume;
         }
     }
 
-    private List<String> getListFields(Section section){
-        List<String> list = new ArrayList<>();
-        List<String> items = ((ListField) section).getItems();
-        list.add(String.valueOf(items.size()));
-        list.addAll(items);
-        return list;
-    }
 
-    private List<String> getExperienceFields(Section section){
-        List<String> list = new ArrayList<>();
-        List<Experience> experiences = ((ExperienceField) section).getExperiences();
-        list.add(String.valueOf(experiences.size()));
-        for (Experience exp : experiences) {
-            list.add(exp.getHomePage().getName());
-            list.add(exp.getHomePage().getUrl() == null ? "null" : exp.getHomePage().getUrl());
-            List<Experience.Periods> periods = exp.getPeriods();
-            list.add(String.valueOf(periods.size()));
-            for (Experience.Periods period : periods) {
-                list.add(period.getStartDate().toString());
-                list.add(period.getEndDate().toString());
-                list.add(period.getTitle());
-                list.add(period.getDescription() == null ? "null" : period.getDescription());
-            }
-        }
-        return list;
-    }
+
+
 }
