@@ -1,23 +1,21 @@
 package ru.javawebinar.basejava.storage;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
+import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.*;
-import ru.javawebinar.basejava.util.DateUtil;
 
-import java.io.File;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractStorageTest {
 
-    protected static final String STORAGE_DIR = "//home//balamut//basejava//ResumeStorage";
+    protected static final String STORAGE_DIR = Config.getInstance().getStorageDir();
 
     protected Storage storage;
 
@@ -118,7 +116,7 @@ public abstract class AbstractStorageTest {
     @Before
     public void setUp() throws Exception {
         storage.clear();
-        fillResume(RESUME_1);
+     //   fillResume(RESUME_1);
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);

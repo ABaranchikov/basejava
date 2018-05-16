@@ -6,9 +6,6 @@ import ru.javawebinar.basejava.util.LocalDateAdapter;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import static ru.javawebinar.basejava.util.DateUtil.NOW;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
@@ -16,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import static ru.javawebinar.basejava.util.DateUtil.NOW;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Experience implements Serializable {
@@ -96,7 +95,7 @@ public class Experience implements Serializable {
             this.dateFrom = dateFrom;
             this.dateTo = dateTo;
             this.title = title;
-            this.description = description;
+            this.description = description == null ? "" : description;
         }
 
         public LocalDate getStartDate() {

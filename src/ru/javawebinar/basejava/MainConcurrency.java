@@ -2,6 +2,12 @@ package ru.javawebinar.basejava;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static java.util.concurrent.Executors.newCachedThreadPool;
 
 public class MainConcurrency {
     public static final int THREADS_NUMBER = 10_000;
@@ -20,26 +26,36 @@ public class MainConcurrency {
         new Thread(() -> System.out.println(Thread.currentThread().getName() + ", " + Thread.currentThread().getState())).start();
         System.out.println(thread0.getState());
 
-
-        List<Thread> list = new ArrayList<>(THREADS_NUMBER);
+        CountDownLatch latch = new CountDownLatch(THREADS_NUMBER);
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        //List<Thread> list = new ArrayList<>(THREADS_NUMBER);
         for (int i = 0; i < THREADS_NUMBER; i++) {
-            Thread thread = new Thread(() -> {
+            executorService.submit(()->{
+          //  Thread thread = new Thread(() -> {
                 for (int j = 0; j < 100; j++) {
                      counter();
                    // inc();
                 }
+                latch.countDown();
             });
-            thread.start();
-            list.add(thread);
+
+          //  thread.start();
+            //list.add(thread);
         }
-        list.forEach(t -> {
+   /*     list.forEach(t -> {
             try {
                 t.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
-
+*/
+        try {
+            latch.await();
+            executorService.shutdown();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println(counter);
     }
 
