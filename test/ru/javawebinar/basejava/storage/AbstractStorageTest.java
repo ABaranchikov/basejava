@@ -10,6 +10,7 @@ import ru.javawebinar.basejava.model.*;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,10 +20,10 @@ public abstract class AbstractStorageTest {
 
     protected Storage storage;
 
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String UUID_4 = "uuid4";
+    private static final String UUID_1 = UUID.randomUUID().toString();
+    private static final String UUID_2 = UUID.randomUUID().toString();
+    private static final String UUID_3 = UUID.randomUUID().toString();
+    private static final String UUID_4 = UUID.randomUUID().toString();
 
     private static final String NAME_1 = "Grigory Kislin";
     private static final String NAME_2 = "Jhon Doe";
@@ -54,7 +55,7 @@ public abstract class AbstractStorageTest {
         res.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/gkislin");
         res.addContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
-        StringField objective = new StringField("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+   /*     StringField objective = new StringField("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         res.addSection(SectionType.OBJECTIVE, objective);
 
         StringField personal = new StringField("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
@@ -110,13 +111,13 @@ public abstract class AbstractStorageTest {
         ExperienceField edu = new ExperienceField(edu1, edu2, edu3, edu4, edu5);
 
         res.addSection(SectionType.EDUCATION, edu);
-
+*/
     }
 
     @Before
     public void setUp() throws Exception {
         storage.clear();
-     //   fillResume(RESUME_1);
+        fillResume(RESUME_1);
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
@@ -136,6 +137,7 @@ public abstract class AbstractStorageTest {
     @Test
     public void update() throws Exception {
         Resume newResume = new Resume(UUID_1, NAME_1);
+        fillResume(newResume);
         storage.update(newResume);
         assertEquals(newResume, storage.get(UUID_1));
     }
