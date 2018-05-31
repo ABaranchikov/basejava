@@ -14,6 +14,11 @@ public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) throws SQLException {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("PostgreSQL DataSource unable to load PostgreSQL JDBC Driver");
+        }
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
@@ -58,32 +63,31 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        Resume[] resumes = new Resume[1];
-
         return sqlHelper.transactionalExecute(conn -> {
+            Resume resume;
             try (PreparedStatement ps = conn.prepareStatement("SELECT full_name FROM resume WHERE uuid = ?")) {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
                 if (!rs.next()) {
                     throw new NotExistStorageException(uuid);
                 }
-                resumes[0] = new Resume(uuid, rs.getString("full_name"));
+                resume = new Resume(uuid, rs.getString("full_name"));
             }
             try (PreparedStatement ps = conn.prepareStatement("SELECT type, value FROM contact WHERE resume_uuid =?")) {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()){
-                    addContact(rs, resumes[0]);
+                    addContact(rs, resume);
                 }
             }
             try (PreparedStatement ps = conn.prepareStatement("SELECT type, value FROM section WHERE resume_uuid = ?")) {
                 ps.setString(1, uuid);
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()){
-                    addSection(rs, resumes[0]);
+                    addSection(rs, resume);
                 }
             }
-            return resumes[0];
+            return resume;
         });
     }
 
@@ -176,17 +180,15 @@ public class SqlStorage implements Storage {
             for (Map.Entry<SectionType, Section> e : r.getSections().entrySet()) {
                 SectionType sectionType = e.getKey();
                 Section values = e.getValue();
-                StringBuilder sb = new StringBuilder();
+                String value = null;
                 switch (sectionType){
                     case PERSONAL:
                     case OBJECTIVE:
-                        sb.append(values.toString());
+                        value = values.toString();
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        for (String item:((ListField) values).getItems()){
-                            sb.append(item).append("\n");
-                        }
+                        value = String.join("\n", ((ListField) values).getItems());
                         break;
                     case EXPERIENCE:
                         break;
@@ -195,7 +197,7 @@ public class SqlStorage implements Storage {
                 }
                 ps.setString(1, r.getUuid());
                 ps.setString(2, e.getKey().name());
-                ps.setString(3, sb.toString());
+                ps.setString(3, value);
                 ps.addBatch();
             }
             if (r.getSections().size() > 0) {
