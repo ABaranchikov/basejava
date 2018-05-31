@@ -40,6 +40,9 @@ public abstract class AbstractStorageTest {
         RESUME_2 = new Resume(UUID_2, NAME_2);
         RESUME_3 = new Resume(UUID_3, NAME_3);
         RESUME_4 = new Resume(UUID_4, NAME_4);
+
+        RESUME_4.addContact(ContactType.PHONE, "44444");
+        RESUME_4.addContact(ContactType.SKYPE, "Skype");
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -55,14 +58,14 @@ public abstract class AbstractStorageTest {
         res.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/gkislin");
         res.addContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
-   /*     StringField objective = new StringField("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+        StringField objective = new StringField("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         res.addSection(SectionType.OBJECTIVE, objective);
 
         StringField personal = new StringField("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
-        res.addSection(SectionType.PERSONAL, objective);
+        res.addSection(SectionType.PERSONAL, personal);
 
         List<String> achievment = new ArrayList<>();
-        achievment.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.\n");
+        achievment.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
         achievment.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
         achievment.add("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера.");
         achievment.add("Реализация c нуля Rich Internet Application приложения на стеке технологий JPA, Spring, Spring-MVC, GWT, ExtGWT (GXT), Commet, HTML5, Highstock для алгоритмического трейдинга.");
@@ -85,7 +88,7 @@ public abstract class AbstractStorageTest {
         qualifications.add("Инструменты: Maven + plugin development, Gradle, настройка Ngnix");
         res.addSection(SectionType.QUALIFICATIONS, new ListField(qualifications));
 
-        Experience.Periods period1 = new Experience.Periods(2014, Month.OCTOBER, 2016, Month.JANUARY, "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
+       /* Experience.Periods period1 = new Experience.Periods(2014, Month.OCTOBER, 2016, Month.JANUARY, "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
         Experience exp1 = new Experience("Java Online Projects", "", period1);
 
         Experience.Periods period2 = new Experience.Periods(2014, Month.OCTOBER, 2016, Month.JANUARY, "Старший разработчик (backend)", "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
@@ -136,8 +139,11 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
-        Resume newResume = new Resume(UUID_1, NAME_1);
-        fillResume(newResume);
+        Resume newResume = new Resume(UUID_1, "New name");
+      //  fillResume(newResume);
+        newResume.addContact(ContactType.MAIL, "mail1@google.com");
+        newResume.addContact(ContactType.SKYPE, "NewSkype");
+        newResume.addContact(ContactType.PHONE, "+7 921 222-22-22");
         storage.update(newResume);
         assertEquals(newResume, storage.get(UUID_1));
     }
