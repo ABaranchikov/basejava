@@ -15,7 +15,6 @@ public class WebHelper {
 
         for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
             out.write("<a href=" + entry.getValue() + ">" + entry.getValue() + "</a><br/>\n");
-
         }
         out.write("<p>\n");
         out.write("<hr>\n");

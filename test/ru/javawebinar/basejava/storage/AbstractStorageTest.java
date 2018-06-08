@@ -41,6 +41,8 @@ public abstract class AbstractStorageTest {
         RESUME_3 = new Resume(UUID_3, NAME_3);
         RESUME_4 = new Resume(UUID_4, NAME_4);
 
+        RESUME_2.addContact(ContactType.MAIL, "44444@yandex.ru");
+
         RESUME_4.addContact(ContactType.PHONE, "44444");
         RESUME_4.addContact(ContactType.SKYPE, "Skype");
     }
@@ -52,11 +54,12 @@ public abstract class AbstractStorageTest {
 
     public void fillResume(Resume res) {
         res.addContact(ContactType.PHONE, "+7(921) 855-0482");
+        res.addContact(ContactType.MAIL, "g.kislin@mail.ru");
         res.addContact(ContactType.SKYPE, "grigory.kislin");
         res.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
         res.addContact(ContactType.GITHUB, "https://github.com/gkislin");
         res.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/gkislin");
-        res.addContact(ContactType.HOMEPAGE, "http://gkislin.ru/");
+        res.addContact(ContactType.HOME_PAGE, "http://gkislin.ru/");
 
         StringField objective = new StringField("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         res.addSection(SectionType.OBJECTIVE, objective);
