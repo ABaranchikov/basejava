@@ -22,6 +22,9 @@ public class ListField extends Section {
         this.items = items;
     }
 
+    public void add(String item){
+        items.add(item);
+    }
     public List<String> getItems(){
         return new ArrayList<>(items);
     }

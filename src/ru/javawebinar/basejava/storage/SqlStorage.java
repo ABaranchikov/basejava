@@ -1,6 +1,6 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.Sql.SqlHelper;
+import ru.javawebinar.basejava.sql.SqlHelper;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.util.JsonParser;
@@ -107,7 +107,7 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         return sqlHelper.transactionalExecute(conn -> {
             Map<String, Resume> resumes = new LinkedHashMap<>();
-            try (PreparedStatement ps = conn.prepareStatement("SELECT uuid, full_name FROM resume")) {
+            try (PreparedStatement ps = conn.prepareStatement("SELECT uuid, full_name FROM resume ORDER BY full_name")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()){
                     String uuid = rs.getString("uuid");

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -35,30 +37,38 @@ public class ResumeServlet extends HttpServlet {
         }
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
-            if (value != null && value.trim().length() != 0) {
+            if (isExist(value)) {
                 r.addContact(type, value);
             } else {
                 r.getContacts().remove(type);
             }
         }
         for (SectionType type : SectionType.values()) {
-            String value = request.getParameter(type.name());
-            if (value != null && value.trim().length() != 0) {
-                Section section = null;
+            Section section = null;
                 switch (type) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        section = new StringField(value);
+                        String value = request.getParameter(type.name());
+                        section = isExist(value) ? new StringField(value) : null;
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        section = new ListField(request.getParameterValues(type.name()));
-                        break;
+                        String[] values = request.getParameterValues(type.name());
+                        List<String> list = new ArrayList<>();
+                        for (String st : values) {
+                            if (isExist(st)) {
+                                list.add(st);
+                            }
+                        }
+                        if (list.size() > 0) {
+                            section = new ListField(list);
+                        }
                     case EXPERIENCE:
                         break;
                     case EDUCATION:
                         break;
                 }
+            if (section != null) {
                 r.addSection(type, section);
             } else {
                 r.getSections().remove(type);
@@ -90,6 +100,8 @@ public class ResumeServlet extends HttpServlet {
                 r = new Resume();
                 break;
             case "view":
+                r = storage.get(uuid);
+                break;
             case "edit":
                 r = storage.get(uuid);
                 for (SectionType sectionType : SectionType.values()) {
@@ -105,6 +117,8 @@ public class ResumeServlet extends HttpServlet {
                         case QUALIFICATIONS:
                             if (section == null) {
                                 section = new ListField("");
+                            } else {
+                                ((ListField) section).add("");
                             }
                             break;
                         case EXPERIENCE:
@@ -134,5 +148,9 @@ public class ResumeServlet extends HttpServlet {
                 jspPath = "/WEB-INF/jsp/view.jsp";
         }
         return jspPath;
+    }
+
+    private boolean isExist(String value) {
+        return value != null && value.trim().length() != 0;
     }
 }
